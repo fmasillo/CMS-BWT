@@ -12,7 +12,9 @@ make
 
 ## Usage
 
-Usage: ./cms_bwt [options] <input filename>
+Usage: 
+```sh
+./cms_bwt [options] <input filename>
 <input filename> is the name of the file containing paths to the reference sequence (in the first line) and to the collection file (in the second line).
   Options: 
         -p      read only a prefix of the file expressed in number of characters, def. whole file
@@ -20,6 +22,7 @@ Usage: ./cms_bwt [options] <input filename>
         -r      outputs the run-length encoded BWT, def. false 
         -m      memory saving implementation, def. false 
         -o      basename for the output files, def. <input filename>
+```
 
 Command example:
 ```sh
