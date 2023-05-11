@@ -12,7 +12,7 @@
 
 // function that prints the instructions for using the tool
 void print_help(char** argv) {
-  std::cout << "Usage: " << argv[ 0 ] << "[options] <input filename>" << std::endl;
+  std::cout << "Usage: " << argv[ 0 ] << " [options] <input filename>" << std::endl;
   std::cout << "<input filename> is the name of the file containing paths to the reference sequence (in the first line) and to the collection file (in the second line)." << std::endl;
   std::cout << "  Options: " << std::endl
         << "\t-p \tread only a prefix of the file expressed in number of characters, def. whole file" << std::endl
