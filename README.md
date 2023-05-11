@@ -33,6 +33,7 @@ file_example.txt content should look like this:
 ```
 /data/reference.fa
 /data/collection.fa
+
 ```
 
 
