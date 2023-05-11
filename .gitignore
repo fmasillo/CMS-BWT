@@ -30,3 +30,8 @@
 *.exe
 *.out
 *.app
+
+#My executables
+cms_bwt
+check_rl_bwt*
+file_test*
