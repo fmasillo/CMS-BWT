@@ -24,7 +24,7 @@ Usage:
         -o      basename for the output files, def. <input filename>
 ```
 
-Command example:
+Command example for running the memory-saving implementation and outputting to my_output.rl_bwt the run-length encoded BWT of the first 100000000 characters using 1GB of extra space:
 ```sh
 ./cms_bwt -p 100000000 -b 1 -r -m -o my_output file_example.txt
 ```
