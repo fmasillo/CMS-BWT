@@ -114,17 +114,17 @@ int main(int argc, char **argv) {
     filename[strlen(filename) - 1] = '\0';
 
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
-    std::ofstream errorFile(arg.filename+".log");
+    std::ofstream errorFile(arg.outname+".log");
     std::cerr.rdbuf(errorFile.rdbuf());
     switch(arg.memory_saving) {
         case 0:
             std::cout << "==== CMS-BWT" << std::endl;
-            std::cout << "==== For more information about the execution, please check the log file: " << arg.filename+".log" << std::endl;
+            std::cout << "==== For more information about the execution, please check the log file: " << arg.outname+".log" << std::endl;
             computeBWT(arg, refFileName, filename);
             break;
         case 1:
             std::cout << "==== CMS-BWT (memory saving)" << std::endl;
-            std::cout << "==== For more information about the execution, please check the log file: " << arg.filename+".log" << std::endl;
+            std::cout << "==== For more information about the execution, please check the log file: " << arg.outname+".log" << std::endl;
             computeBWTMemorySaving(arg, refFileName, filename);
             break;
     }
