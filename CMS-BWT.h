@@ -19,7 +19,7 @@
 #include "rmq_tree.h"
 #include "match.h"
 #include "predecessor.h"
-#include "libsais/src/libsais.h"
+#include "libsais/include/libsais.h"
 
 using data_type = uint8_t;
 using filelength_type = uint64_t;
