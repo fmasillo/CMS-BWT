@@ -115,6 +115,8 @@ struct predecessor2{
 	uint32_t mask;
 	uint8_t shift;
 	~predecessor2(){
+		for (auto p : sampledPredArray)
+			delete[] p;
 		std::vector<predEle2 *>().swap(sampledPredArray);
 		std::vector<uint32_t>().swap(docSizes);
 	}

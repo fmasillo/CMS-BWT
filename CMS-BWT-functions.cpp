@@ -265,6 +265,7 @@ void lzInitialize(char *refFileName, char *collFileName, uint64_t prefixLength) 
          }
       }
       //x[n] = 0;
+      delete[] firstChar;
    }
    else{
       std::cerr << "Reference file is empty!\n";
@@ -325,7 +326,8 @@ void lzInitialize(char *refFileName, char *collFileName, uint64_t prefixLength) 
    _SA = sa;
    _ISA = new uint32_t[_n];
    _PLCP = new int32_t[_n];
-   _LCP = new int32_t[_n];
+   _LCP = new int32_t[_n + 1];
+   _LCP[_n] = -1;
    t01 = std::chrono::high_resolution_clock::now();
    constructISA(_SA,_ISA,_n);
    t02 = std::chrono::high_resolution_clock::now();
@@ -1330,6 +1332,7 @@ int lzFactorize(Args arg, char *collFileName) {
          }
       }
    }
+
    inHeads.close();
    std::remove("headsSA.txt");
    std::vector<Match>().swap(phrases);
@@ -1619,6 +1622,9 @@ int lzFactorize(Args arg, char *collFileName) {
       streamOutfile.write((char*)&prevChar, sizeof(uint8_t));
       streamOutfile.close();
    }
+
+   delete[] bucketsForExpandedBWT;
+   delete[] counterSmallerThanHead;
    
    //fclose(f);
    std::cerr << "Computed final BWT\n";
@@ -3064,6 +3070,8 @@ int lzFactorizeMemorySaving(Args arg, char *collFileName) {
    std::cerr << "Computed final BWT\n";
    t2 = std::chrono::high_resolution_clock::now();
    std::cerr << "Computing final BWT took: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms\n";
+   delete[] bucketsForExpandedBWT;
+   delete[] counterSmallerThanHead;
    delete[] BWTheads;
    //print BWT_collection
    //std::cerr << "BWT_collection: ";
