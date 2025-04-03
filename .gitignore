@@ -32,6 +32,7 @@
 *.app
 
 #My executables
-cms_bwt
-check_rl_bwt*
+cmsbwt
 file_test*
+.vscode/
+build/

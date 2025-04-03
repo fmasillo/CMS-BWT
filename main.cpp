@@ -18,7 +18,6 @@ void print_help(char** argv) {
         << "\t-p \tread only a prefix of the file expressed in number of characters, def. whole file" << std::endl
         << "\t-b \tsize for the additional memory buffer in GB, def. 2 " << std::endl
         << "\t-r \toutputs the run-length encoded BWT, def. false " << std::endl
-        << "\t-m \tmemory saving implementation, def. false " << std::endl
         << "\t-o \tbasename for the output files, def. <input filename>" << std::endl
         << "\t-h \tprints this help" << std::endl;
   exit(-1);
@@ -35,7 +34,7 @@ void parseArgs( int argc, char** argv, Args& arg ) {
     puts("");
 
     std::string sarg;
-    while ((c = getopt( argc, argv, "p:b:o:rmh") ) != -1) {
+    while ((c = getopt( argc, argv, "p:b:o:rh") ) != -1) {
         switch(c) {
             case 'p':
                 sarg.assign(optarg);
@@ -48,9 +47,6 @@ void parseArgs( int argc, char** argv, Args& arg ) {
             case 'r':
                 arg.format = 1; break;
                 // store the output format
-            case 'm':
-                arg.memory_saving = 1; break;
-                // store the memory saving mode
             case 'o':
                 sarg.assign(optarg);
                 arg.outname.assign(sarg); break;
@@ -91,51 +87,46 @@ int main(int argc, char **argv) {
     Args arg;
     parseArgs(argc, argv, arg);
 
+    std::ifstream infile(arg.filename);
+    if (!infile) {
+        fprintf(stderr, "Error opening file %s\n", arg.filename.c_str());
+        exit(1);
+    }
+    std::string line;
 
-    FILE *infilesfile = fopen(arg.filename.c_str(), "r");
-    if (!infilesfile) {
-        fprintf(stderr, "Error opening file of filenames %s\n", arg.filename.c_str());
+    std::getline(infile, line);
+    if (line.empty()) {
+        fprintf(stderr, "Error: first line of file %s is empty\n", arg.filename.c_str());
+        exit(1);
+    }
+    std::string refFileName = line;
+
+    std::getline(infile, line);
+    if (line.empty()) {
+        fprintf(stderr, "Error: second line of file %s is empty\n", arg.filename.c_str());
         exit(1);
     }
 
-    char *filename = (char *) malloc(1024);
-    if (!(fgets(filename, 1024, infilesfile))) {
-        fprintf(stderr, "Error reading first filename from file of filenames.\n");
+    std::string filename = line;
+    filename.erase(filename.find_last_not_of(" \n\r\t") + 1); // trim trailing whitespace
+    if (filename.empty()) {
+        fprintf(stderr, "Error: second line of file %s is empty\n", arg.filename.c_str());
         exit(1);
     }
-
-    filename[strlen(filename) - 1] = 0;
-    char *refFileName = new char[1024];
-    strcpy(refFileName, filename);
-
-    fprintf(stderr, "\n");
-
-    char * _ = fgets(filename, 1024, infilesfile);
-    filename[strlen(filename) - 1] = '\0';
 
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     std::ofstream errorFile(arg.outname+".log");
     auto cerr_buf = std::cerr.rdbuf(errorFile.rdbuf());
-    switch(arg.memory_saving) {
-        case 0:
-            std::cout << "==== CMS-BWT" << std::endl;
-            std::cout << "==== For more information about the execution, please check the log file: " << arg.outname+".log" << std::endl;
-            computeBWT(arg, refFileName, filename);
-            break;
-        case 1:
-            std::cout << "==== CMS-BWT (memory saving)" << std::endl;
-            std::cout << "==== For more information about the execution, please check the log file: " << arg.outname+".log" << std::endl;
-            computeBWTMemorySaving(arg, refFileName, filename);
-            break;
-    }
+    
+    std::cout << "==== CMS-BWT" << std::endl;
+    std::cout << "==== For more information about the execution, please check the log file: " << arg.outname+".log" << std::endl;
+    computeBWT(arg, refFileName, filename);
+    
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     std::cout << "==== Time elapsed: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms" << std::endl;
 
     std::cerr.rdbuf(cerr_buf);
     errorFile.close();
-
-    delete[] refFileName;
-    free(filename);
 
     return 0;
 }
