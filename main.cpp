@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
 
     std::chrono::high_resolution_clock::time_point t1 = std::chrono::high_resolution_clock::now();
     std::ofstream errorFile(arg.outname+".log");
-    std::cerr.rdbuf(errorFile.rdbuf());
+    auto cerr_buf = std::cerr.rdbuf(errorFile.rdbuf());
     switch(arg.memory_saving) {
         case 0:
             std::cout << "==== CMS-BWT" << std::endl;
@@ -130,6 +130,12 @@ int main(int argc, char **argv) {
     }
     std::chrono::high_resolution_clock::time_point t2 = std::chrono::high_resolution_clock::now();
     std::cout << "==== Time elapsed: " << std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1).count() << " ms" << std::endl;
+
+    std::cerr.rdbuf(cerr_buf);
+    errorFile.close();
+
+    delete[] refFileName;
+    free(filename);
 
     return 0;
 }
